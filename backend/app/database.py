@@ -1,17 +1,27 @@
 # app/database.py
 import pymysql
+import time
 from .config import settings
 
 # MySQL 연결 함수
-def get_connection():
-    return pymysql.connect(
-        host=settings.MYSQL_HOST,
-        user=settings.MYSQL_USER,
-        password=settings.MYSQL_PASSWORD,
-        database=settings.MYSQL_DB,
-        port=settings.MYSQL_PORT,
-        cursorclass=pymysql.cursors.DictCursor
-    )
+def get_connection(retries=5, delay=2):
+    for attempt in range(retries):
+        try:
+            connection = pymysql.connect(
+                host=settings.MYSQL_HOST,
+                user=settings.MYSQL_USER,
+                password=settings.MYSQL_PASSWORD,
+                database=settings.MYSQL_DB,
+                port=settings.MYSQL_PORT,
+                cursorclass=pymysql.cursors.DictCursor
+            )
+            return connection
+        except pymysql.MySQLError as e:
+            if attempt < retries - 1:
+                time.sleep(delay)
+            else:
+                raise e
+
 
 # 테이블 생성 함수
 def create_table():

@@ -5,13 +5,13 @@ FROM python:3.12
 WORKDIR /app
 
 # Python 패키지 의존성 복사
-COPY ./requirements.txt
+COPY requirements.txt /app/
 
 # 의존성 설치
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 모든 소스 코드를 컨테이너로 복사
-COPY . .
+COPY . /app/
 
 # Uvicorn을 사용하여 FastAPI 애플리케이션 실행
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
