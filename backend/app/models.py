@@ -6,7 +6,7 @@ def get_count():
     connection = get_connection()
     try:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT count FROM counter LIMIT 1")
+            cursor.execute("SELECT count FROM counter")
             result = cursor.fetchone()
             if result is None:
                 cursor.execute("INSERT INTO counter (count) VALUES (0)")
@@ -23,7 +23,7 @@ def increase_count():
         with connection.cursor() as cursor:
             cursor.execute("UPDATE counter SET count = count + 1")
             connection.commit()
-            cursor.execute("SELECT count FROM counter LIMIT 1")
+            cursor.execute("SELECT count FROM counter")
             result = cursor.fetchone()
             return {"count": result["count"]}
     finally:
@@ -36,7 +36,7 @@ def decrease_count():
         with connection.cursor() as cursor:
             cursor.execute("UPDATE counter SET count = count - 1")
             connection.commit()
-            cursor.execute("SELECT count FROM counter LIMIT 1")
+            cursor.execute("SELECT count FROM counter")
             result = cursor.fetchone()
             return {"count": result["count"]}
     finally:
